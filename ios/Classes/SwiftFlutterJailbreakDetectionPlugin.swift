@@ -9,13 +9,23 @@ public class SwiftFlutterJailbreakDetectionPlugin: NSObject, FlutterPlugin {
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 
+    public func isiOSAppOnMac() -> Bool {
+      if #available(iOS 14.0, *) {
+        return ProcessInfo.processInfo.isiOSAppOnMac
+      }
+      return false
+    }
+
+
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "jailbroken":
-            
-            let isJailBroken = DTTJailbreakDetection.isJailbroken()
-        
-            result(isJailBroken)
+            if isiOSAppOnMac() {
+                result(false);
+            } else {
+              let isJailBroken = DTTJailbreakDetection.isJailbroken()
+              result(isJailBroken)
+            }
             break
         case "developerMode":
             result(false)
